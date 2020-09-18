@@ -1,0 +1,12 @@
+{
+  "title": "OKKY Filter",
+  "name": "okky-filter",
+  "version": "0.0.1",
+  "description": "OKKY Block List",
+  "main": "index.js",
+  "author": "siva6",
+  "engines": {
+    "firefox": ">=38.0a1"
+  },
+  "license": "MIT"
+}

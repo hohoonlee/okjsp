@@ -1,0 +1,71 @@
+<!doctype html>
+<html>
+	<head>
+		<title>Getting Started Extension's Popup</title>
+		<style>
+			body {
+				font-family: "Segoe UI", "Lucida Grande", Tahoma, sans-serif;
+				font-size: 80%;
+			}
+			#list {
+				text-overflow: ellipsis;
+				overflow: hidden;
+				max-width: 200px;
+			}
+			ul {
+				list-style-type: none;
+				margin: 0;
+				padding: 0;
+			}
+
+			li {
+				font: 200 12px/1.5 Helvetica, Verdana, sans-serif;
+				border-bottom: 1px solid #ccc;
+			}
+
+			li:last-child {
+				border: none;
+			}
+
+			li a {
+				outline: none;
+				text-decoration: none;
+				color: #000;
+				display: block;
+				width: 200px;
+
+				-webkit-transition: font-size 0.3s ease, background-color 0.3s ease;
+				-moz-transition: font-size 0.3s ease, background-color 0.3s ease;
+				-o-transition: font-size 0.3s ease, background-color 0.3s ease;
+				-ms-transition: font-size 0.3s ease, background-color 0.3s ease;
+				transition: font-size 0.3s ease, background-color 0.3s ease;
+			}
+
+			li a:hover {
+				font-size: 18px;
+				background: #f6f6f6;
+			}
+			
+			div {
+				font: 200 12px/1.5 Helvetica, Verdana, sans-serif;
+				width: 200px;
+			}
+		</style>
+		<script src="../lib/jquery/jquery.js"></script>
+		<script src="popup.js"></script>
+	</head>
+	<body>
+		<div>
+			<input type="radio" name="hideType" id="hidden" value="hidden"><label for="hidden">hidden</label>
+			<input type="radio" name="hideType" id="italics" value="italics"><label for="italics">italics</label>
+		</div>
+		<ul id="list">
+			<li><a href="#">test123...........얃러댜ㅓ라ㅓㅏ어ㅏㅓㄹ아ㅓㄹ</a></li>
+			<li><a href="#">test1한글...ㅌㅌㅌㅌㅌㅌㅌㅌㅌㅌㅌㅇ댜럳....댜렂미러마ㅓㅑㅐㅁ덜마ㅣㅓㅏ머라..</a></li>
+			<li><a href="#">test1123123131231223223223232323232</a></li>
+			<li><a href="#">test1......</a></li>
+			<li><a href="#">testabcd112</a></li>
+		</ul>
+	</body>
+</html>
+
