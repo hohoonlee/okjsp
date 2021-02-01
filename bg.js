@@ -11,8 +11,8 @@ var companyUrl	= targetDomain + '/company/info/';
 // var u1 = "$(\"a[href*='@ID@']\").parents('li,div.article-middle-block').css('font-style', 'italic').css('background-color', 'darkgray');";
 // var c0 = "$(\"a[href*='@ID@']\").parents('li,div.article-middle-block').hide();";
 // var c1 = "$(\"a[href*='@ID@']\").parents('li,div.article-middle-block').css('font-style', 'italic').css('background-color', 'darkgray');";
-var u0 = "$(\"a[href^='/user/info/			@ID@']\").parents('li,div.article-middle-block').hide();";
-var u1 = "$(\"a[href^='/user/info/			@ID@']\").parents('li,div.article-middle-block').css('font-style', 'italic').css('background-color', 'darkgray');";
+var u0 = "$(\"a[href^='/user/info/@ID@']\").parents('li,div.article-middle-block').hide();";
+var u1 = "$(\"a[href^='/user/info/@ID@']\").parents('li,div.article-middle-block').css('font-style', 'italic').css('background-color', 'darkgray');";
 var c0 = "$(\"a[href^='/company/info/@ID@']\").parents('li,div.article-middle-block').hide();";
 var c1 = "$(\"a[href^='/company/info/@ID@']\").parents('li,div.article-middle-block').css('font-style', 'italic').css('background-color', 'darkgray');";
 

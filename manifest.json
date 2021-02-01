@@ -3,7 +3,7 @@
 
 	"name":"OKKY Filter",
 	"description":"특정 사용자 필터링 하기",
-	"version":"0.4.7",
+	"version":"0.4.8",
 
 	"background": {
 		"persistent":false,
