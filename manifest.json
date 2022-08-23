@@ -1,36 +1,50 @@
 {
-	"manifest_version": 2,
+	"manifest_version": 3,
 
 	"name":"OKKY Filter",
 	"description":"특정 사용자 필터링 하기",
 	"version":"0.4.8",
 
 	"background": {
-		"persistent":false,
-		"scripts":["bg.js"]
+		"service_worker": "background.js"
 	},
-	"browser_action": {
-		"default_icon": "data/icon.png",
+	"action": {
+		"_default_icon": "data/icon.png",
+		"default_icons": {
+			"16": "data/16.png",
+			"32": "data/32.png",
+			"64": "data/64.png",
+			"128": "data/128.png",
+			"256": "data/256.png",
+			"512": "data/512.png"
+		},
 		"default_title": "OKKY Block List",
 		"default_popup": "data/popup.html"
 	},
 	"permissions": [
-		"https://*.okky.kr/*",
-		"tabs",
-		"contextMenus",
 		"storage",
+		"scripting",
+		"tabs",
 		"activeTab",
+
+		"contextMenus",
 		"alarms"
 	],
+	"host_permissions": [
+		"https://*.okky.kr/*"
+	],
 	"icons": {
-		"16": "data/icon16.png",
-		"32": "data/icon32.png",
-		"64": "data/icon64.png"
+		"16": "data/16.png",
+		"32": "data/32.png",
+		"64": "data/64.png",
+		"128": "data/128.png",
+		"256": "data/256.png",
+		"512": "data/512.png"
 	},
 	"content_scripts": [
     {
 		"matches":["https://*.okky.kr/*"],
-        "js": ["lib/jquery/jquery.js"]
-    }],
-	"content_security_policy": "script-src 'self' https://ssl.google-analytics.com; object-src 'self'"
+		"all_frames":true,
+        "js": ["lib/jquery/jquery.js","content-script.js"]
+    }]
 }
