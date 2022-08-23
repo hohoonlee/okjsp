@@ -26,7 +26,6 @@ chrome.runtime.onInstalled.addListener(function(details){
 
 // background.js
 chrome.runtime.onMessage.addListener( ({cmd, data},sender,cb) => {
-	console.log(cmd, data);
     switch (cmd) {
         case 'blockList':
 			blockList(cb);
@@ -148,7 +147,6 @@ const checkNoti = alarm => {
 	}, function(err) {
 		setRead('?');
 	});
-	console.log('checkNoti:', alarm);
 };
 
 chrome.alarms.onAlarm.addListener(checkNoti);
