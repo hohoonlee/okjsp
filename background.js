@@ -131,22 +131,9 @@ const setUnread = (unreadItemCount) => {
 }
 
 const getData = (url, cb, err) => {
-	const xhr = new XMLHttpRequest();
-	xhr.onreadystatechange = function() {
-		if (xhr.readyState === 4 || xhr.status === 401) {
-			if(xhr.status === 401) {
-				if(err) err(xhr.responseText);
-			}else {
-				try {
-					if(cb) cb(JSON.parse(xhr.responseText));
-				}catch(e) {
-					if(err) err(e);
-				}
-			}
-		}
-	};
-	xhr.open("GET", url, true);
-	xhr.send();
+	fetch(url).then(res => {
+		cb(res)
+	}).catch(err);
 };
 
 const checkNoti = alarm => {
