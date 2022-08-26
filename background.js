@@ -17,9 +17,7 @@ chrome.runtime.onInstalled.addListener(function(details){
 
     if(details.reason == "install"){
 
-    }
-    else if(details.reason == "update"){
-
+    } else if(details.reason == "update"){
         // 버전 업데이트 또는 확장 프로그램에서 새로고침시
     }
 });
@@ -42,8 +40,7 @@ chrome.runtime.onMessage.addListener( ({cmd, data},sender,cb) => {
 
 const reloadPage = cb => {
 	chrome.tabs.query({active: true, currentWindow: true}, tabs => {
-		chrome.tabs.sendMessage(tabs[0].id, {cmd: 'reloadPage'});
-		if(cb) cb();
+		chrome.tabs.sendMessage(tabs[0].id, {cmd: 'reloadPage'}, null, cb);
 	});
 };
 
