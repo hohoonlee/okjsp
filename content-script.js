@@ -9,6 +9,7 @@ chrome.runtime.onMessage.addListener( ({cmd, data},sender,cb) => {
 
 const addObserver = cb => {
 	const body = document.querySelector('#__next');
+	if(!body) return;
 	let oldHref = document.location.href;
 	const observer = new MutationObserver(mutations => {
 		if(oldHref === document.location.href) return;
@@ -16,13 +17,13 @@ const addObserver = cb => {
 		if(cb) cb();
 	});
 
-	observer.observe(body, {childList:true, subtree:true});
+	if(observer && observer.observe) observer.observe(body, {childList:true, subtree:true});
 };
 
 const hideUser = (isHide, info) => {
 	if(!info) return;
 	const key = ((info.type === 'c')?'/company/':'/users/') + info.id;
-	const $target = $('a[href="' + key + '"]').parents('li');
+	const $target = $('a[href="' + key + '"]').parents('li,.space-x-1');
 	if(isHide) {
 		$target.hide();
 	}else {

@@ -40,7 +40,7 @@ chrome.runtime.onMessage.addListener( ({cmd, data},sender,cb) => {
 
 const reloadPage = cb => {
 	chrome.tabs.query({active: true, currentWindow: true}, tabs => {
-		chrome.tabs.sendMessage(tabs[0].id, {cmd: 'reloadPage'}, null, cb);
+		if(tabs && tabs.length > 0 && tabs[0].id) chrome.tabs.sendMessage(tabs[0].id, {cmd: 'reloadPage'}, null, cb);
 	});
 };
 
@@ -126,24 +126,24 @@ const setUnread = (unreadItemCount) => {
 	chrome.action.setBadgeText({text: '' + unreadItemCount});
 }
 
-const getData = (url, cb, err) => {
-	fetch(url).then(res => {
-		cb(res)
-	}).catch(err);
+const getData = async (url) => {
+	return await (await (fetch(url))).text();
 };
 
-const checkNoti = alarm => {
+const checkNoti = async alarm => {
 	if('refresh' !== alarm.name && 'reload' !== alarm.name) return;
 
-	getData(targetDomain + '/api/okky-web/notifications/count', function(count){
+	const body = await getData(targetDomain + '/api/okky-web/notifications/count');
+	if(!body) {
+		setRead('?');
+	}else {
+		const count = parseInt(body, 10);
 		if(count > 0) {
 			setUnread(count);
 		}else {
 			setAllRead();
 		}
-	}, function(err) {
-		setRead('?');
-	});
+	}
 };
 
 chrome.alarms.onAlarm.addListener(checkNoti);
