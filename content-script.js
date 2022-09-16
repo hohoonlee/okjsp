@@ -31,6 +31,12 @@ const hideUser = (isHide, info) => {
 	}
 }
 
+const isFirstPage = () => {
+	const u = new URL(location.href);
+	const page = u.searchParams.get("page");
+	return (!page || page === '1');
+};
+
 const reloadPage = async cb => {
 	const {type} = await chrome.storage.sync.get(['type']);
 	const isHide = type !== 'italics';
@@ -38,6 +44,10 @@ const reloadPage = async cb => {
 	const list = await blockList();
 	list.forEach(func);
 	document.querySelectorAll('button[id^=headlessui-disclosure-button]').forEach(i => i.click());
+
+	const $notice = $('div.overflow-hidden li.bg-blue-50');
+	if($notice) $notice[(isFirstPage())?'show':'hide']();
+
 	if(cb) cb();
 };
 
