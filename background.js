@@ -4,17 +4,6 @@ const userUrl		= targetDomain + '/users/';
 const companyUrl	= targetDomain + '/company/';
 
 chrome.runtime.onInstalled.addListener(function(details){
-	chrome.contextMenus.create({
-		"title": `%s 를(을) 차단합니다.`,
-		'id': 'contextlink',
-		'contexts': ['link'],
-		'targetUrlPatterns':[
-			`${userUrl}*`,
-			`${companyUrl}*`,
-		]
-	});
-	chrome.contextMenus.onClicked.addListener(onClickHandler);
-
     if(details.reason == "install"){
 
     } else if(details.reason == "update"){
@@ -61,9 +50,10 @@ const saveBlockUser = (info, memo) => {
 		id		= info.linkUrl.replace(companyUrl, '');
 		type	= 'c';
 	}
-	// if(!info.selectionText) {
+	if(!info.selectionText) {
+		info.selectionText = id;
 		// info.selectionText = prompt('차단할 이름', id);
-	// }
+	}
 
 	blockList(list => {
 		saveBlocker(
@@ -74,6 +64,7 @@ const saveBlockUser = (info, memo) => {
 };
 
 const saveBlocker = (list = [], o, cb) => {
+	console.log('>>>', o);
 	chrome.storage.sync.clear();
 	if(o) list.push(o);
 	const quota = parseInt(list.length / keys.length, 10) + 1;
@@ -110,6 +101,18 @@ const blockList = cb => {
 		if(cb) cb(list);
 	});
 };
+
+chrome.contextMenus.create({
+	"title": `%s 를(을) 차단합니다.`,
+	'id': 'contextlink',
+	'contexts': ['link'],
+	'targetUrlPatterns':[
+		`${userUrl}*`,
+		`${companyUrl}*`,
+	]
+});
+
+chrome.contextMenus.onClicked.addListener(onClickHandler);
 
 //noti ///////////////////////////////////////////////////////
 const setAllRead = () => {
