@@ -3,13 +3,12 @@
 
 	"name":"OKKY Filter",
 	"description":"특정 사용자 필터링 하기",
-	"version":"0.5.5",
+	"version":"0.5.6",
 
 	"background": {
 		"service_worker": "background.js"
 	},
 	"action": {
-		"_default_icon": "data/icon.png",
 		"default_icons": {
 			"16": "data/16.png",
 			"32": "data/32.png",

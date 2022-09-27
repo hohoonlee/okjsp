@@ -8,12 +8,20 @@ chrome.runtime.onMessage.addListener( ({cmd, data},sender,cb) => {
 });
 
 const addObserver = cb => {
-	const body = document.querySelector('#__next');
-	if(!body) return;
+	const body = document.querySelector('#__next > main');
+	if(!body) {
+		setTimeout(()=>addObserver(cb), 1_000);
+		return;
+	}
 	let oldHref = document.location.href;
 	const observer = new MutationObserver(mutations => {
+		// const change = mutations.some(mr => {
+		// 	return (mr.addedNodes && mr.addedNodes.length > 0);
+		// });
+		// if(!change) return;
 		if(oldHref === document.location.href) return;
 		oldHref = document.location.href;
+		// console.log('RUN >>', mutations);
 		if(cb) cb();
 	});
 
@@ -38,17 +46,23 @@ const isFirstPage = () => {
 };
 
 const reloadPage = async cb => {
-	const {type} = await chrome.storage.sync.get(['type']);
-	const isHide = type !== 'italics';
-	const func = info => hideUser(isHide, info);
-	const list = await blockList();
-	list.forEach(func);
-	document.querySelectorAll('button[id^=headlessui-disclosure-button]').forEach(i => i.click());
+	try {
+		const {type} = await chrome.storage.sync.get(['type']);
+		const isHide = type !== 'italics';
+		const func = info => hideUser(isHide, info);
+		const list = await blockList();
+		list.forEach(func);
+		document.querySelectorAll('button[id^=headlessui-disclosure-button]').forEach(i => i.click());
 
-	const $notice = $('div.overflow-hidden li.bg-blue-50');
-	if($notice) $notice[(isFirstPage())?'show':'hide']();
+		const $notice = $('div.overflow-hidden li.bg-blue-50');
+		if($notice) $notice[(isFirstPage())?'show':'hide']();
 
-	if(cb) cb();
+		if(cb) cb();
+	}catch(e) {
+		setTimeout(() => {
+			reloadPage(cb);
+		}, 1_000);
+	}
 };
 
 const blockList = async () => {
@@ -56,9 +70,8 @@ const blockList = async () => {
 };
 
 window.onload = () => {
-	const run = () => setTimeout(reloadPage, 1_000);
 	addObserver(mutation => {
-		run();
+		reloadPage();
 	});
-	run();
+	setTimeout(reloadPage, 100);
 };
