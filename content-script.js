@@ -7,22 +7,21 @@ chrome.runtime.onMessage.addListener( ({cmd, data},sender,cb) => {
 	return true;
 });
 
+let loop;
 const addObserver = cb => {
-	const body = document.querySelector('#__next > main');
+	const body = document.querySelector('#__next');
 	if(!body) {
 		setTimeout(()=>addObserver(cb), 1_000);
 		return;
 	}
 	let oldHref = document.location.href;
 	const observer = new MutationObserver(mutations => {
-		// const change = mutations.some(mr => {
-		// 	return (mr.addedNodes && mr.addedNodes.length > 0);
-		// });
-		// if(!change) return;
 		if(oldHref === document.location.href) return;
 		oldHref = document.location.href;
-		// console.log('RUN >>', mutations);
-		if(cb) cb();
+		if(cb) {
+			clearTimeout(loop);
+			loop = setTimeout(cb, 100);
+		}
 	});
 
 	if(observer && observer.observe) observer.observe(body, {childList:true, subtree:true});
@@ -42,7 +41,7 @@ const hideUser = (isHide, info) => {
 const isFirstPage = () => {
 	const u = new URL(location.href);
 	const page = u.searchParams.get("page");
-	return (!page || page === '1');
+	return (page && page === '1');
 };
 
 const reloadPage = async cb => {
@@ -52,10 +51,12 @@ const reloadPage = async cb => {
 		const func = info => hideUser(isHide, info);
 		const list = await blockList();
 		list.forEach(func);
+
 		document.querySelectorAll('button[id^=headlessui-disclosure-button]').forEach(i => i.click());
 
-		const $notice = $('div.overflow-hidden li.bg-blue-50');
-		if($notice) $notice[(isFirstPage())?'show':'hide']();
+		document.querySelectorAll('div.overflow-hidden li.bg-blue-50').forEach(i => {
+			i.style.display = (isFirstPage())?'':'none';
+		});
 
 		if(cb) cb();
 	}catch(e) {
@@ -70,8 +71,18 @@ const blockList = async () => {
 };
 
 window.onload = () => {
-	addObserver(mutation => {
-		reloadPage();
-	});
+	const f = () => {
+		addObserver(mutation => {
+			reloadPage();
+		});
+	};
+
+	try {
+		f();
+	}catch(e) {
+		console.error(e);
+		setTimeout(f, 500);
+	}
+
 	setTimeout(reloadPage, 100);
 };
