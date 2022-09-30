@@ -41,10 +41,11 @@ const hideUser = (isHide, info) => {
 const isFirstPage = () => {
 	const u = new URL(location.href);
 	const page = u.searchParams.get("page");
-	return (page && page === '1');
+	return (!page || page === '1');
 };
 
 const reloadPage = async cb => {
+	console.log('reloadPage()');
 	try {
 		const {type} = await chrome.storage.sync.get(['type']);
 		const isHide = type !== 'italics';
@@ -71,6 +72,7 @@ const blockList = async () => {
 };
 
 window.onload = () => {
+	console.log('onload');
 	const f = () => {
 		addObserver(mutation => {
 			reloadPage();
