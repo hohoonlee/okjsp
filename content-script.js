@@ -45,7 +45,6 @@ const isFirstPage = () => {
 };
 
 const reloadPage = async cb => {
-	console.log('reloadPage()');
 	try {
 		const {type} = await chrome.storage.sync.get(['type']);
 		const isHide = type !== 'italics';
@@ -72,7 +71,6 @@ const blockList = async () => {
 };
 
 window.onload = () => {
-	console.log('onload');
 	const f = () => {
 		addObserver(mutation => {
 			reloadPage();
