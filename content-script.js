@@ -30,7 +30,7 @@ const addObserver = cb => {
 const hideUser = (isHide, info) => {
 	if(!info) return;
 	const key = ((info.type === 'c')?'/company/':'/users/') + info.id;
-	const $target = $('a[href="' + key + '"]').parents('li,.space-x-1');
+	const $target = $('a[href="' + key + '"]').closest('div').not('.group').parents('li,.space-x-1');
 	if(isHide) {
 		$target.hide();
 	}else {
