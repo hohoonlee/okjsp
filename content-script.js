@@ -86,3 +86,17 @@ window.onload = () => {
 
 	setTimeout(reloadPage, 100);
 };
+
+const targetNode = document.querySelector('h3').nextElementSibling;
+if (targetNode) {
+    const observer = new MutationObserver((mutationsList) => {
+        for (const mutation of mutationsList) {
+            if (mutation.type === 'childList') {
+				setTimeout(reloadPage, 100);
+				return;
+            }
+        }
+    });
+
+    observer.observe(targetNode, { childList: true, subtree: true });
+}
