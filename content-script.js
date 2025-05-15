@@ -92,7 +92,7 @@ if (targetNode) {
     const observer = new MutationObserver((mutationsList) => {
         for (const mutation of mutationsList) {
             if (mutation.type === 'childList') {
-				setTimeout(reloadPage, 100);
+				setTimeout(reloadPage, 500);
 				return;
             }
         }
