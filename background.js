@@ -3,6 +3,8 @@ const targetDomain = 'https://okky.kr';
 const userUrl		= targetDomain + '/users/';
 const companyUrl	= targetDomain + '/company/';
 
+const normalizeId = id => String(id).replace(/\/.*$/, '');
+
 chrome.runtime.onInstalled.addListener(function(details){
     if(details.reason == "install"){
 
@@ -11,7 +13,6 @@ chrome.runtime.onInstalled.addListener(function(details){
     }
 });
 
-// background.js
 chrome.runtime.onMessage.addListener( ({cmd, data},sender,cb) => {
     switch (cmd) {
         case 'blockList':
@@ -45,9 +46,9 @@ const onClickHandler = (info) => {
 
 const saveBlockUser = (info, memo) => {
 	var type	= 'u';
-	var id		= info.linkUrl.replace(userUrl, '');
-	if(info.linkUrl === id) {
-		id		= info.linkUrl.replace(companyUrl, '');
+	var id		= normalizeId(info.linkUrl.replace(userUrl, ''));
+	if(info.linkUrl.replace(userUrl, '') === info.linkUrl) {
+		id		= normalizeId(info.linkUrl.replace(companyUrl, ''));
 		type	= 'c';
 	}
 	if(!info.selectionText) {
@@ -81,7 +82,7 @@ const saveBlocker = (list = [], o, cb) => {
 
 const deleteBlocker = (id, cb) => {
 	blockList(list => {
-		list = list.filter(o => o.id != id);
+		list = list.filter(o => normalizeId(o.id) !== normalizeId(id));
 		saveBlocker(list, null, cb);
 	});
 };

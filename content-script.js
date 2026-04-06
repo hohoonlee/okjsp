@@ -9,54 +9,41 @@ chrome.runtime.onMessage.addListener( ({cmd, data},sender,cb) => {
 
 let loop;
 const addObserver = cb => {
-	const body = document.querySelector('#__next');
-	if(!body) {
-		setTimeout(()=>addObserver(cb), 1_000);
-		return;
-	}
-	let oldHref = document.location.href;
-	const observer = new MutationObserver(mutations => {
-		if(oldHref === document.location.href) return;
-		oldHref = document.location.href;
-		if(cb) {
-			clearTimeout(loop);
-			loop = setTimeout(cb, 100);
-		}
-	});
-
-	if(observer && observer.observe) observer.observe(body, {childList:true, subtree:true});
+	const onNav = () => {
+		clearTimeout(loop);
+		loop = setTimeout(cb, 100);
+	};
+	navigation.addEventListener('navigate', onNav);
 };
+
+const normalizeId = id => String(id).replace(/\/.*$/, '');
 
 const hideUser = (isHide, info) => {
 	if(!info) return;
-	const key = ((info.type === 'c')?'/company/':'/users/') + info.id;
-	const $target = $('a[href="' + key + '"]').closest('div').not('.group').parents('li,.space-x-1');
+	const id = normalizeId(info.id);
+	const key = ((info.type === 'c')?'/company/':'/users/') + id;
+	const $target = $(`a[href="${key}"], a[href^="${key}/"]`).not('.group a, .group a *').closest('[data-slot="item"], li');
+	if($target.length === 0) return false;
 	if(isHide) {
-		$target.hide();
+		$target.hide().addClass('okjsp-hidden');
 	}else {
-		$target.css('font-style', 'italic').css('background-color', 'darkgray');
+		$target.css('font-style', 'italic').css('background-color', 'darkgray').addClass('okjsp-italic');
 	}
+	return true;
 }
 
-const isFirstPage = () => {
-	const u = new URL(location.href);
-	const page = u.searchParams.get("page");
-	return (!page || page === '1');
+const resetUser = () => {
+	$('.okjsp-hidden').show().removeClass('okjsp-hidden');
+	$('.okjsp-italic').css({'font-style':'', 'background-color':''}).removeClass('okjsp-italic');
 };
 
 const reloadPage = async cb => {
 	try {
 		const {type} = await chrome.storage.sync.get(['type']);
 		const isHide = type !== 'italics';
-		const func = info => hideUser(isHide, info);
+		resetUser();
 		const list = await blockList();
-		list.forEach(func);
-
-		document.querySelectorAll('button[id^=headlessui-disclosure-button]').forEach(i => i.click());
-
-		document.querySelectorAll('div.overflow-hidden li.bg-blue-50').forEach(i => {
-			i.style.display = (isFirstPage())?'':'none';
-		});
+		list.forEach(info => hideUser(isHide, info));
 
 		if(cb) cb();
 	}catch(e) {
@@ -70,33 +57,23 @@ const blockList = async () => {
 	return await chrome.runtime.sendMessage({cmd:'blockList'});
 };
 
-window.onload = () => {
-	const f = () => {
-		addObserver(mutation => {
-			reloadPage();
-		});
-	};
-
-	try {
-		f();
-	}catch(e) {
-		console.error(e);
-		setTimeout(f, 500);
-	}
-
-	setTimeout(reloadPage, 100);
+let contentLoop;
+let contentObserver;
+const observeContent = () => {
+	if(contentObserver) contentObserver.disconnect();
+	const target = document.querySelector('main') || document.body;
+	contentObserver = new MutationObserver(() => {
+		clearTimeout(contentLoop);
+		contentLoop = setTimeout(reloadPage, 300);
+	});
+	contentObserver.observe(target, { childList: true, subtree: true });
 };
 
-const targetNode = document.querySelector('h3').nextElementSibling;
-if (targetNode) {
-    const observer = new MutationObserver((mutationsList) => {
-        for (const mutation of mutationsList) {
-            if (mutation.type === 'childList') {
-				setTimeout(reloadPage, 500);
-				return;
-            }
-        }
-    });
-
-    observer.observe(targetNode, { childList: true, subtree: true });
-}
+window.onload = () => {
+	addObserver(() => {
+		observeContent();
+		reloadPage();
+	});
+	observeContent();
+	reloadPage();
+};

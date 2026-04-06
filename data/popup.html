@@ -27,23 +27,32 @@
 				border: none;
 			}
 
-			li a {
-				outline: none;
-				text-decoration: none;
-				color: #000;
-				display: block;
-				width: 200px;
-
-				-webkit-transition: font-size 0.3s ease, background-color 0.3s ease;
-				-moz-transition: font-size 0.3s ease, background-color 0.3s ease;
-				-o-transition: font-size 0.3s ease, background-color 0.3s ease;
-				-ms-transition: font-size 0.3s ease, background-color 0.3s ease;
-				transition: font-size 0.3s ease, background-color 0.3s ease;
+			li {
+				display: flex;
+				justify-content: space-between;
+				align-items: center;
 			}
 
-			li a:hover {
-				font-size: 18px;
-				background: #f6f6f6;
+			li .name {
+				overflow: hidden;
+				text-overflow: ellipsis;
+				white-space: nowrap;
+				flex: 1;
+			}
+
+			.del-btn {
+				background: none;
+				border: none;
+				color: #c00;
+				cursor: pointer;
+				font-weight: bold;
+				padding: 0 4px;
+				margin-left: 4px;
+				font-size: 12px;
+			}
+
+			.del-btn:hover {
+				color: #f00;
 			}
 
 			div {
@@ -59,12 +68,6 @@
 			<input type="radio" name="hideType" id="hidden" value="hidden"><label for="hidden">hidden</label>
 			<input type="radio" name="hideType" id="italics" value="italics"><label for="italics">italics</label>
 		</div>
-		<ul id="list">
-			<li><a href="#">test123...........얃러댜ㅓ라ㅓㅏ어ㅏㅓㄹ아ㅓㄹ</a></li>
-			<li><a href="#">test1한글...ㅌㅌㅌㅌㅌㅌㅌㅌㅌㅌㅌㅇ댜럳....댜렂미러마ㅓㅑㅐㅁ덜마ㅣㅓㅏ머라..</a></li>
-			<li><a href="#">test1123123131231223223223232323232</a></li>
-			<li><a href="#">test1......</a></li>
-			<li><a href="#">testabcd112</a></li>
-		</ul>
+		<ul id="list"></ul>
 	</body>
 </html>
